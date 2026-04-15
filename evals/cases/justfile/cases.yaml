@@ -1,0 +1,94 @@
+# Regression suite for justfile skill
+
+description: "justfile skill regression cases"
+
+tests:
+  # --- Positive: greenfield justfile ---
+  - description: "Positive — set up global justfile from scratch"
+    vars:
+      prompt: |
+        I want to set up a global justfile at ~/justfile for my personal
+        automations. Can you scaffold the basics and add a recipe that wraps
+        terraform calls for my infra/ directory?
+    assert:
+      - type: contains
+        value: "default:"
+      - type: contains
+        value: "just --list"
+      - type: contains-any
+        value:
+          - "set positional-arguments"
+          - "*args"
+      - type: contains-any
+        value:
+          - "working-directory"
+          - "[working-directory:"
+      - type: llm-rubric
+        value: |
+          The scaffold should: (1) include a default recipe calling
+          `@just --list`, (2) use `set positional-arguments`, (3) include
+          commented recipes, (4) wrap terraform via a single passthrough
+          recipe with `[working-directory: 'infra']`, NOT separate
+          tf-init/tf-plan/tf-apply aliases.
+
+  # --- Positive: anti-pattern fix ---
+  - description: "Positive — refactor thin alias chain"
+    vars:
+      prompt: |
+        Here's my justfile. Review it:
+
+        ```justfile
+        tf-init:
+            cd terraform && terraform init
+        tf-plan:
+            cd terraform && terraform plan
+        tf-apply:
+            cd terraform && terraform apply
+        ```
+    assert:
+      - type: contains-any
+        value:
+          - "alias"
+          - "wrapper"
+          - "passthrough"
+          - "working-directory"
+      - type: llm-rubric
+        value: |
+          The response should flag the thin alias chain anti-pattern and
+          propose collapsing to a single wrapper recipe with *args and
+          [working-directory: 'terraform']. It should explain WHY (declining
+          marginal returns, new subcommands require new recipes).
+
+  # --- Negative: not a justfile task ---
+  - description: "Negative — user wants make, not just"
+    vars:
+      prompt: |
+        I'm building a C project and need a build system with proper file
+        dependencies and incremental compilation. What should I use?
+    assert:
+      - type: not-contains
+        value: "justfile"
+      - type: llm-rubric
+        value: |
+          The response should recommend `make` or a real build tool, NOT
+          a justfile. The skill should explicitly recognize that `just` is
+          a command runner, not a build system with dependency tracking.
+
+  # --- Edge: multi-line recipe without shebang ---
+  - description: "Edge — multi-line recipe that needs shebang"
+    vars:
+      prompt: |
+        Write a just recipe called `deploy` that: activates a venv, sets
+        DEPLOY_ENV=staging, runs ./bin/migrate, and then ./bin/deploy. It
+        should exit if any step fails.
+    assert:
+      - type: contains
+        value: "#!/usr/bin/env bash"
+      - type: contains
+        value: "set -euo pipefail"
+      - type: llm-rubric
+        value: |
+          Because the recipe has multiple dependent steps and needs
+          fail-fast semantics, the answer MUST use a shebang recipe with
+          `set -euo pipefail`. A plain multi-line recipe would silently
+          continue on failure.

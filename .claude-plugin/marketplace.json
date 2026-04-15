@@ -1,0 +1,36 @@
+{
+  "name": "nothingfancy",
+  "owner": {
+    "name": "Nothing Fancy",
+    "email": "wes@nothingfancy.ai",
+    "url": "https://nothingfancy.ai"
+  },
+  "metadata": {
+    "version": "0.1.0",
+    "description": "Public agent skills from Nothing Fancy — narrowly-scoped, evals-first, harness-neutral."
+  },
+  "plugins": [
+    {
+      "name": "spec-anchored-development",
+      "version": "0.1.0",
+      "description": "Treats specifications as living system maps with a bidirectional graph to code. Use when asked to create a spec, write a specification, generate a spec from code, maintain specs, sync specs with code, or mention spec-anchored development. Supports Python, Go, and TypeScript.",
+      "author": {
+        "name": "Wesley O. Nichols",
+        "email": "wes@nothingfancy.ai",
+        "url": "https://nothingfancy.ai"
+      },
+      "source": "./plugins/spec-anchored-development"
+    },
+    {
+      "name": "justfile",
+      "version": "0.1.0",
+      "description": "Authors and maintains global and project justfiles using opinionated conventions — positional arguments, working-directory attributes, shebang recipes, and avoiding thin alias chains. Use when writing, editing, or reviewing a justfile or when the user mentions just or command runners.",
+      "author": {
+        "name": "Wesley O. Nichols",
+        "email": "wes@nothingfancy.ai",
+        "url": "https://nothingfancy.ai"
+      },
+      "source": "./plugins/justfile"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "spec-anchored-development",
+  "version": "0.1.0",
+  "description": "Treats specifications as living system maps with a bidirectional graph to code. Use when asked to create a spec, write a specification, generate a spec from code, maintain specs, sync specs with code, or mention spec-anchored development. Supports Python, Go, and TypeScript.",
+  "author": {
+    "name": "Wesley O. Nichols",
+    "email": "wes@nothingfancy.ai",
+    "url": "https://nothingfancy.ai"
+  }
+}

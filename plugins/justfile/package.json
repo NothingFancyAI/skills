@@ -1,0 +1,18 @@
+{
+  "name": "@nothingfancy/justfile",
+  "version": "0.1.0",
+  "description": "Authors and maintains justfiles using opinionated conventions.",
+  "keywords": ["pi-package", "agent-skill", "justfile", "just", "command-runner"],
+  "author": {
+    "name": "Wesley O. Nichols",
+    "email": "wes@nothingfancy.ai",
+    "url": "https://nothingfancy.ai"
+  },
+  "license": "CC-BY-SA-4.0",
+  "pi": {
+    "skills": ["./skills"]
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*"
+  }
+}

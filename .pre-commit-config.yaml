@@ -1,0 +1,39 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ["--maxkb=500"]
+      - id: check-merge-conflict
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: validate-plugin-metadata
+        name: validate plugin metadata
+        entry: python3 .github/scripts/validate_plugin_metadata.py
+        language: system
+        pass_filenames: false
+        files: ^(plugins/|\.claude-plugin/|README\.md|CODEOWNERS)
+      - id: validate-skill-frontmatter
+        name: validate skill frontmatter
+        entry: python3 .github/scripts/validate_skill_frontmatter.py
+        language: system
+        pass_filenames: false
+        files: ^plugins/.*/SKILL\.md$
+      - id: validate-codex-skills
+        name: validate codex skill sidecar
+        entry: python3 .github/scripts/validate_codex_skills.py
+        language: system
+        pass_filenames: false
+        files: ^(plugins/|\.codex/)

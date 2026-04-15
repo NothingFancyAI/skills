@@ -1,0 +1,45 @@
+# Regression suite for {{name}}
+
+description: "{{name}} skill regression cases"
+
+tests:
+  # --- Positive: realistic triggering prompt ---
+  - description: "Positive — {{what this case proves}}"
+    vars:
+      prompt: |
+        {{a realistic user prompt that should fire the skill}}
+    assert:
+      - type: contains
+        value: "{{mechanical output that must be present}}"
+      - type: llm-rubric
+        value: |
+          The response should: (1) {{required behavior 1}},
+          (2) {{required behavior 2}},
+          (3) {{required behavior 3}}.
+          It should NOT {{documented anti-pattern the skill forbids}}.
+
+  # --- Negative: looks related but should NOT fire ---
+  - description: "Negative — {{adjacent intent that should use a different tool}}"
+    vars:
+      prompt: |
+        {{a prompt that sounds related but has a different real intent}}
+    assert:
+      - type: not-contains
+        value: "{{signature output of this skill that should be absent}}"
+      - type: llm-rubric
+        value: |
+          The response should {{address the actual intent}}, NOT
+          {{what this skill would wrongly do}}. The skill should
+          not fire.
+
+  # --- Edge: adversarial or historically-broken input ---
+  - description: "Edge — {{known failure mode locked in as regression}}"
+    vars:
+      prompt: |
+        {{the input that previously broke this skill}}
+    assert:
+      - type: llm-rubric
+        value: |
+          {{The specific correct behavior that must be preserved.
+          Explain WHY it matters so future reviewers understand
+          the regression this case prevents.}}

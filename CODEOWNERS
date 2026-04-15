@@ -1,0 +1,17 @@
+# Nothing Fancy Skills — CODEOWNERS
+#
+# Anything not explicitly assigned below falls through to the repo owner.
+
+*                                          @wesnick
+
+# Per-plugin ownership. Add co-owners here as the marketplace grows.
+/plugins/spec-anchored-development/        @wesnick
+/plugins/justfile/                         @wesnick
+
+# Shared infrastructure
+/.github/                                  @wesnick
+/evals/                                    @wesnick
+/.claude-plugin/                           @wesnick
+/.codex/                                   @wesnick
+/CLAUDE.md                                 @wesnick
+/README.md                                 @wesnick

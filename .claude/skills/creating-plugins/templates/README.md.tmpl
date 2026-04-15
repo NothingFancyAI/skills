@@ -1,0 +1,53 @@
+# {{name}}
+
+{{One-sentence description of what this plugin does. Same voice as the `description:` in plugin.json, slightly longer.}}
+
+## What it does
+
+- {{capability 1}}
+- {{capability 2}}
+- {{capability 3}}
+
+## Usage
+
+### Claude Code
+
+```sh
+claude --plugin-dir ./plugins/{{name}}
+```
+
+Or via the marketplace, once installed.
+
+### pi
+
+```sh
+pi -e ./plugins/{{name}}    # ephemeral
+pi install ./plugins/{{name}}
+```
+
+### Codex
+
+See the root [`.codex/INSTALL.md`](../../.codex/INSTALL.md).
+
+## Harness support
+
+| Feature | Claude Code | Codex | pi |
+|---|---|---|---|
+| Skill (SKILL.md) | ✅ | ✅ | ✅ |
+| {{add rows for any commands/hooks/agents/extensions}} | | | |
+
+{{If the plugin is skill-only, say: "Pure skill content — runs identically in all three harnesses."}}
+
+{{If the plugin has harness gaps, say: "<specific feature> is <harness>-only. <Explanation of why there's no equivalent in the other harnesses and what users of those harnesses should expect.>"}}
+
+## Evals
+
+Regression cases live in [`../../evals/cases/{{name}}/cases.yaml`](../../evals/cases/{{name}}/cases.yaml).
+
+```sh
+uv run evals/framework/run.py --skill {{name}}
+```
+
+## License
+
+[CC BY-SA 4.0](../../LICENSE) — made by [Nothing Fancy](https://nothingfancy.ai).

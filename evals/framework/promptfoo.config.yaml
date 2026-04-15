@@ -1,0 +1,38 @@
+# Nothing Fancy eval framework — promptfoo configuration
+#
+# This is the root configuration shared by every skill's cases.yaml.
+# Per-skill `tests:` are merged in by framework/run.py at eval time.
+#
+# The providers below define the harness × model grid. Adapters for
+# Codex and pi are stubs — see evals/README.md for status.
+
+description: "Nothing Fancy skill eval grid"
+
+prompts:
+  - "{{prompt}}"
+
+providers:
+  - id: anthropic:claude-opus-4-6
+    config:
+      max_tokens: 4096
+  - id: anthropic:claude-sonnet-4-6
+    config:
+      max_tokens: 4096
+  - id: anthropic:claude-haiku-4-5-20251001
+    config:
+      max_tokens: 4096
+
+  # Stub providers — fill in when harness adapters land.
+  # - id: "exec:codex --model gpt-5-codex"
+  #   label: codex:gpt-5-codex
+  # - id: "exec:pi -p {{prompt}}"
+  #   label: pi:default
+
+defaultTest:
+  assert:
+    - type: not-contains
+      value: "I cannot"
+    - type: not-contains
+      value: "as an AI"
+
+outputPath: ../reports/latest.json

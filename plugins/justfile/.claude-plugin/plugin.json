@@ -1,0 +1,10 @@
+{
+  "name": "justfile",
+  "version": "0.1.0",
+  "description": "Authors and maintains global and project justfiles using opinionated conventions — positional arguments, working-directory attributes, shebang recipes, and avoiding thin alias chains. Use when writing, editing, or reviewing a justfile or when the user mentions just or command runners.",
+  "author": {
+    "name": "Wesley O. Nichols",
+    "email": "wes@nothingfancy.ai",
+    "url": "https://nothingfancy.ai"
+  }
+}

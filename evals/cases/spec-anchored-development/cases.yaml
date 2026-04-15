@@ -1,0 +1,85 @@
+# Regression suite for spec-anchored-development
+#
+# Three required case types: positive (should fire), negative (should NOT fire),
+# edge (adversarial or historically-broken).
+
+description: "spec-anchored-development skill regression cases"
+
+tests:
+  # --- Positive: greenfield trigger ---
+  - description: "Positive — greenfield trigger with explicit ask"
+    vars:
+      prompt: |
+        I'm starting a new service that handles async job scheduling across
+        multiple workers. I want to write a proper spec before I start coding.
+        Can you help me set up a spec-anchored workflow for this?
+    assert:
+      - type: contains-any
+        value:
+          - "greenfield"
+          - "System"
+          - "non-goals"
+          - "Spec:"
+      - type: contains-any
+        value:
+          - "Python"
+          - "Go"
+          - "TypeScript"
+      - type: llm-rubric
+        value: |
+          The response should: (1) identify this as greenfield mode,
+          (2) ask which language the service will be written in OR propose
+          a spec structure with entities and non-goals, (3) mention the
+          bidirectional spec-to-code graph OR Spec: back-link comments.
+          It should NOT produce pseudocode implementations.
+
+  # --- Positive: existing-codebase trigger ---
+  - description: "Positive — existing codebase, reverse-engineer spec"
+    vars:
+      prompt: |
+        We have an auth service in Python that nobody's documented. I need to
+        reverse-engineer a spec from the code so the new team member can get
+        up to speed. Where do I start?
+    assert:
+      - type: contains-any
+        value:
+          - "existing-codebase"
+          - "entry point"
+          - "boundaries"
+      - type: llm-rubric
+        value: |
+          The response should identify this as existing-codebase mode and
+          propose inspecting the repository before drafting. It should
+          distinguish observed state from target design.
+
+  # --- Negative: looks related but should NOT fire ---
+  - description: "Negative — user wants a README, not a spec"
+    vars:
+      prompt: |
+        Can you write a README for this CLI tool? Include an intro, install
+        instructions, and a few usage examples.
+    assert:
+      - type: not-contains
+        value: "spec-anchored"
+      - type: not-contains
+        value: "Spec:"
+      - type: llm-rubric
+        value: |
+          The response should produce README content (intro, install, usage),
+          NOT a system spec with entities, non-goals, or bidirectional
+          code-graph comments. The skill should not fire.
+
+  # --- Edge: language not supported ---
+  - description: "Edge — Rust codebase (not officially supported)"
+    vars:
+      prompt: |
+        I want to write a spec for our Rust crate that handles zero-copy
+        deserialization. Can you use the spec-anchored approach?
+    assert:
+      - type: llm-rubric
+        value: |
+          The response should acknowledge that Rust is not covered by the
+          language-specific references (Python/Go/TypeScript only), flag
+          this to the user before proceeding, and offer to adapt the
+          general principles if the user wants to continue. It should NOT
+          silently pretend Rust is supported.
