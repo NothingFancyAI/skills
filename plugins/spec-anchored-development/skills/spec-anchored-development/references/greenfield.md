@@ -97,8 +97,10 @@ Follow-up probes:
 
 ## After the interview
 
-1. Draft the spec. Run the quality checklist from SKILL.md.
-2. Run the refinement loop:
+1. Draft the spec using the locked frontmatter and required-sections list from SKILL.md. Initial status is `draft`. Code map and Test map start empty; populate them as code lands. Known deltas starts empty.
+2. The Why section should reflect Round 1 answers; Tradeoffs from Round 4 alternatives discussed; Invariants from Round 2 hard constraints. Edit impact uses the explicit placeholder `_(none yet — populate when the system grows or status reaches current)_` until the system spans more than one module.
+3. Run the quality checklist from SKILL.md (status enum aside — `draft` specs cannot fail the back-link gate yet).
+4. Run the refinement loop:
    - **Completeness**: Have all relevant sections been addressed?
    - **Consistency**: Does this align with existing code and spec patterns?
    - **Clarity**: Could a new developer implement this without further questions?
@@ -106,7 +108,10 @@ Follow-up probes:
 
 ## Minimum output
 
-1. Spec index with domain grouping and intended code homes
-2. Architecture spec with boundaries and data flow
-3. Initial domain specs with goals, non-goals, entities, interfaces
-4. Optional implementation checklist for the first delivery slice
+1. `SPEC_INDEX.md` with domain grouping and intended code homes
+2. `specs/CONVENTIONS.md` distilled from SKILL.md
+3. Architecture spec with boundaries and data flow
+4. Initial domain specs (status: `draft`) with all required sections — the Why, Invariants, Tradeoffs, Goals & non-goals, and Core entities are the load-bearing ones at this stage
+5. Optional implementation plan for the first delivery slice
+
+When code starts landing, transition specs to `implementation` and add back-links and code/test map entries as they become real.
