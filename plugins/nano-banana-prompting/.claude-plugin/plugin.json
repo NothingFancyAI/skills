@@ -1,0 +1,10 @@
+{
+  "name": "nano-banana-prompting",
+  "version": "0.1.0",
+  "description": "Crafts and reviews prompts for Google's Nano Banana 2 (Gemini 3.1 Flash Image) and Nano Banana Pro (Gemini 3 Pro Image) image generation and editing models. Use when asked to write, refine, or debug a prompt for Nano Banana, Gemini image generation, or Vertex AI image generation; when generating with reference images, editing or inpainting an existing image, or rendering legible text and typography.",
+  "author": {
+    "name": "Wesley O. Nichols",
+    "email": "wes@nothingfancy.ai",
+    "url": "https://nothingfancy.ai"
+  }
+}

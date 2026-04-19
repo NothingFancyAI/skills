@@ -1,0 +1,124 @@
+# Regression suite for nano-banana-prompting skill
+
+description: "nano-banana-prompting skill regression cases"
+
+tests:
+  # --- Positive: text-to-image, fresh canvas ---
+  - description: "Positive — text-to-image scene, narrative formula"
+    vars:
+      prompt: |
+        Help me write a Nano Banana prompt for a moody noir detective sitting
+        alone in a dimly lit office at midnight, half his face shadowed.
+    assert:
+      - type: contains-any
+        value:
+          - "Subject"
+          - "Composition"
+          - "Style"
+      - type: contains-any
+        value:
+          - "Chiaroscuro"
+          - "softbox"
+          - "low-angle"
+          - "shallow depth of field"
+          - "f/1.8"
+          - "Fujifilm"
+          - "film stock"
+          - "color grading"
+      - type: llm-rubric
+        value: |
+          The response should: (1) produce a narrative prompt, not a comma-
+          separated keyword list, (2) include explicit camera, lens, lighting,
+          or film-stock vocabulary (e.g. low-angle, shallow depth of field
+          f/1.8, chiaroscuro lighting, Fujifilm color science), (3) cover the
+          Subject + Action + Location + Composition + Style structure even if
+          not labelled. It should NOT use Midjourney-style flags (--ar, ::
+          weights), and it should NOT be a bare keyword soup.
+
+  # --- Positive: typography poster ---
+  - description: "Positive — poster with literal text and named fonts"
+    vars:
+      prompt: |
+        Write me a Nano Banana prompt for a summer-sale poster. The poster
+        should have the headline "Summer Sale", a subhead "50% Off", and a
+        tagline "Today Only" — three different font styles, glossy retail
+        look.
+    assert:
+      - type: contains
+        value: "\"Summer Sale\""
+      - type: contains
+        value: "\"50% Off\""
+      - type: contains
+        value: "\"Today Only\""
+      - type: llm-rubric
+        value: |
+          The response should: (1) wrap each rendered phrase in quotes so
+          Nano Banana treats them as literals, (2) name a specific font or
+          typography style for each of the three text blocks (e.g. Brush
+          Script, Impact, Century Gothic, sans-serif, etc.), (3) ideally
+          mention the "text-first hack" — settle the wording in conversation
+          before asking for the rendered image. It should NOT leave the text
+          unquoted or use a single vague font instruction for all three lines.
+
+  # --- Positive: vague style triggers the elicitation menu ---
+  - description: "Positive — underspecified style should trigger a 5-option menu, not a silent pick"
+    vars:
+      prompt: |
+        Write me a Nano Banana prompt for a portrait of a chef in their
+        kitchen. Make it good.
+    assert:
+      - type: llm-rubric
+        value: |
+          Because the user gave NO concrete style cue (no camera, no film
+          stock, no lighting, no art-historical reference), the response
+          should pause and offer the user a menu of style options BEFORE
+          producing a final prompt. The menu should: (1) contain roughly
+          five distinct, concrete style choices — about three that are
+          common/obvious for portraiture (e.g. documentary photography,
+          glossy magazine cover, classical chiaroscuro) and about two that
+          are deliberately adventurous (e.g. 1980s Polaroid, Wes-Anderson
+          diorama, woodblock print, claymation), (2) make each option
+          concrete enough to prompt from — naming a camera, lighting setup,
+          film stock, or art-historical reference, NOT one-word genres like
+          "editorial" with nothing else, (3) make clear the model should
+          wait for the user's pick (or use the harness's interactive
+          question tool such as AskUserQuestion in Claude Code) rather than
+          silently choosing one and producing a finished prompt.
+
+  # --- Negative: different image model ---
+  - description: "Negative — Midjourney prompt should not get Nano Banana formulas"
+    vars:
+      prompt: |
+        Help me write a Midjourney prompt for a fantasy castle on a misty
+        mountaintop at sunrise, painterly style.
+    assert:
+      - type: not-contains
+        value: "Nano Banana"
+      - type: not-contains
+        value: "Gemini 3"
+      - type: llm-rubric
+        value: |
+          The response should address the Midjourney request on its own
+          terms (Midjourney syntax such as --ar, --stylize, ::weights, or
+          a redirect to the Midjourney docs) and should NOT apply the
+          Nano-Banana-specific Subject/Action/Location/Composition/Style
+          formula or recommend Nano-Banana-only tricks like the text-first
+          hack or quoted text rendering. The skill should not fire.
+
+  # --- Edge: negative-framing trap ---
+  - description: "Edge — user prompt full of negations should be reframed positively"
+    vars:
+      prompt: |
+        Generate me a Nano Banana prompt for a beach scene. I don't want any
+        people, no umbrellas, no boats, no birds, no buildings, no clouds.
+        Just an empty beach.
+    assert:
+      - type: llm-rubric
+        value: |
+          The response MUST reframe the user's negation list into positive
+          description (e.g. "an empty beach with undisturbed sand, calm sea,
+          clear sky") instead of literally carrying through phrases like
+          "no people, no umbrellas, no boats". It should briefly explain WHY
+          (negation leaks the forbidden concept into the model's attention,
+          often producing the very thing the user said to avoid). The final
+          prompt should not contain a chain of "no X, no Y, no Z" clauses.

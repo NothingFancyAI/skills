@@ -28,6 +28,12 @@ This is the preferred mode when you want a narrow, focused session.
 | [spec-anchored-development](plugins/spec-anchored-development/) | Treats specifications as living system maps with a bidirectional graph to code. Supports Python, Go, and TypeScript. |
 | [justfile](plugins/justfile/) | Authors and maintains global and project justfiles using opinionated conventions — positional arguments, working-directory attributes, no thin alias chains. |
 
+### Generative AI
+
+| Plugin | Description |
+|--------|-------------|
+| [nano-banana-prompting](plugins/nano-banana-prompting/) | Crafts and reviews prompts for Google's Nano Banana 2 (Gemini 3.1 Flash Image) and Nano Banana Pro (Gemini 3 Pro Image) image generation and editing models — frameworks, camera/lighting direction, and text rendering. |
+
 ## Philosophy
 
 Read [`AGENTS.md`](AGENTS.md) before authoring. The short version:

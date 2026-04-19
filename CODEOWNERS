@@ -7,6 +7,7 @@
 # Per-plugin ownership. Add co-owners here as the marketplace grows.
 /plugins/spec-anchored-development/        @wesnick
 /plugins/justfile/                         @wesnick
+/plugins/nano-banana-prompting/            @wesnick
 
 # Shared infrastructure
 /.github/                                  @wesnick

@@ -1,0 +1,27 @@
+{
+  "name": "@nothingfancy/nano-banana-prompting",
+  "version": "0.1.0",
+  "description": "Crafts and reviews prompts for Google's Nano Banana 2 and Nano Banana Pro image models.",
+  "keywords": [
+    "pi-package",
+    "agent-skill",
+    "nano-banana",
+    "gemini",
+    "image-generation",
+    "image-editing",
+    "vertex-ai",
+    "prompting"
+  ],
+  "author": {
+    "name": "Wesley O. Nichols",
+    "email": "wes@nothingfancy.ai",
+    "url": "https://nothingfancy.ai"
+  },
+  "license": "CC-BY-SA-4.0",
+  "pi": {
+    "skills": ["./skills"]
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*"
+  }
+}
