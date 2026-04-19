@@ -33,6 +33,7 @@ This is the preferred mode when you want a narrow, focused session.
 | Plugin | Description |
 |--------|-------------|
 | [nano-banana-prompting](plugins/nano-banana-prompting/) | Crafts and reviews prompts for Google's Nano Banana 2 (Gemini 3.1 Flash Image) and Nano Banana Pro (Gemini 3 Pro Image) image generation and editing models — frameworks, camera/lighting direction, and text rendering. |
+| [gemini-tts-prompting](plugins/gemini-tts-prompting/) | Crafts and reviews prompts for Google's Gemini 3.1 Flash TTS using audio tags, voice style instructions, and pacing controls — narration, audiobooks, IVR, accessibility, multilingual content. |
 
 ## Philosophy
 

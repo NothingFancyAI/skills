@@ -1,0 +1,178 @@
+# Regression suite for gemini-tts-prompting skill
+
+description: "gemini-tts-prompting skill regression cases"
+
+tests:
+  # --- Positive: audiobook scene with tag stacking ---
+  - description: "Positive — audiobook scene should use stacked emotional + pacing tags"
+    vars:
+      prompt: |
+        Help me write a Gemini TTS prompt for a tense audiobook scene: a
+        treasure hunter cautiously enters a tomb, sees the artifact, then
+        realizes a trap is triggering and runs.
+    assert:
+      - type: contains-any
+        value:
+          - "[cautious]"
+          - "[tension]"
+          - "[anxiety]"
+          - "[nervousness]"
+      - type: contains-any
+        value:
+          - "[awe]"
+          - "[admiration]"
+          - "[excitement]"
+          - "[relief]"
+      - type: contains-any
+        value:
+          - "[panic]"
+          - "[alarm]"
+          - "[fast]"
+      - type: llm-rubric
+        value: |
+          The response should: (1) embed audio tags in square brackets
+          (e.g. [cautious], [awe], [panic]) inline with the spoken text
+          to mark narrative beats, (2) use multiple distinct tags that
+          map to the scene's emotional arc (caution → discovery → alarm),
+          (3) NEVER place two tags directly adjacent (e.g. [whispers][slow])
+          — there must always be at least one word or punctuation mark
+          between any two tags, (4) ideally use [slow] / [fast] /
+          [short pause] / [long pause] for pacing where it adds drama.
+          It should NOT use SSML syntax like <break>, <prosody>, or
+          <emphasis> — Gemini TTS does not parse SSML.
+
+  # --- Positive: IVR / banking digit string requires [slow] + spaced digits ---
+  - description: "Positive — IVR digit string should be spaced and slowed"
+    vars:
+      prompt: |
+        Write me a Gemini TTS prompt for an automated bank fraud alert.
+        It needs to confirm the last four digits of a card (5678) and
+        the disputed charge amount, then ask the customer to press a
+        key to confirm.
+    assert:
+      - type: contains
+        value: "[slow]"
+      - type: contains-any
+        value:
+          - "5 6 7 8"
+          - "5  6  7  8"
+      - type: contains-any
+        value:
+          - "[neutral]"
+          - "[seriousness]"
+          - "[positive]"
+      - type: llm-rubric
+        value: |
+          The response should: (1) wrap the digit string with [slow] AND
+          space the digits individually ("5 6 7 8", not "5678") so the
+          model speaks each digit rather than the number "five thousand
+          six hundred seventy-eight", (2) use restrained tone-shift tags
+          appropriate to enterprise IVR — [neutral] for the opening,
+          something like [seriousness] for the alert, and [positive] for
+          the resolution / call to action — NOT high-drama emotional tags
+          like [panic] or [aggression], (3) keep tag count low and
+          purposeful (a 30-second IVR script does not need ten tags).
+
+  # --- Positive: multilingual content with English tags ---
+  - description: "Positive — French narration should keep tags in English"
+    vars:
+      prompt: |
+        Write me a Gemini TTS prompt in French for a noir scene: a spy
+        cautiously enters a quiet room, whispers about a secret document,
+        then panics when she hears footsteps.
+    assert:
+      - type: contains-any
+        value:
+          - "[cautious]"
+          - "[whispers]"
+          - "[panic]"
+          - "[tension]"
+      - type: llm-rubric
+        value: |
+          The response should: (1) keep audio tags in English (e.g.
+          [whispers], [cautious], [panic]) even though the spoken text is
+          in French, because Gemini TTS only recognizes English tag names,
+          (2) write the spoken narration in French, (3) NOT translate the
+          tag names into French (no [chuchote], [prudent], [panique]),
+          (4) ideally describe any French regional accent in a natural-
+          language style instruction rather than relying on the language
+          code alone.
+
+  # --- Negative: ElevenLabs prompt should not get Gemini audio tags ---
+  - description: "Negative — ElevenLabs TTS prompt should not get Gemini-only audio tags"
+    vars:
+      prompt: |
+        Help me write an ElevenLabs prompt for a calm, soothing meditation
+        narration with gentle pauses between each instruction.
+    assert:
+      - type: not-contains
+        value: "Gemini"
+      - type: not-contains
+        value: "[short pause]"
+      - type: not-contains
+        value: "[long pause]"
+      - type: llm-rubric
+        value: |
+          The response should address the ElevenLabs request on its own
+          terms — using ElevenLabs's actual controls (voice settings like
+          stability and similarity boost, SSML <break time="..."/> tags,
+          or punctuation-based pacing) — and should NOT recommend Gemini
+          TTS audio tags such as [short pause], [long pause], [whispers],
+          or [neutral]. The skill should not fire because the model in
+          question is not Gemini.
+
+  # --- Edge: user puts adjacent tags, skill should reject + fix ---
+  - description: "Edge — adjacent tags must be flagged and rewritten"
+    vars:
+      prompt: |
+        Review this Gemini TTS prompt and tell me if anything is wrong:
+
+        [whispers][slow] The shadow fell across the floor. [excitement][fast]
+        She turned and ran toward the door.
+    assert:
+      - type: llm-rubric
+        value: |
+          The response MUST identify that [whispers][slow] and
+          [excitement][fast] are adjacent-tag errors — Gemini TTS requires
+          at least one word or punctuation mark between any two audio tags
+          and will error or strip tags if they are placed directly back-to-
+          back. The response should provide a corrected version that
+          separates each pair (e.g. by moving one tag mid-sentence, by
+          inserting a word between them, or by replacing one tag —
+          [whispers] already implies a slowed, hushed delivery, so [slow]
+          is often redundant). The response should NOT silently ignore the
+          adjacency or claim the prompt is fine as written.
+
+  # --- Edge: SSML carryover from another TTS system ---
+  - description: "Edge — SSML tags should be converted to Gemini audio tags, not preserved"
+    vars:
+      prompt: |
+        I'm porting this script from Amazon Polly to Gemini TTS. Convert it:
+
+        <speak>Welcome to City Airways.<break time="500ms"/>
+        <prosody rate="slow">Your flight has been delayed.</prosody>
+        <emphasis level="strong">Please proceed to gate B12.</emphasis></speak>
+    assert:
+      - type: not-contains
+        value: "<speak>"
+      - type: not-contains
+        value: "<break"
+      - type: not-contains
+        value: "<prosody"
+      - type: not-contains
+        value: "<emphasis"
+      - type: contains-any
+        value:
+          - "[short pause]"
+          - "[long pause]"
+      - type: contains
+        value: "[slow]"
+      - type: llm-rubric
+        value: |
+          The response MUST convert the SSML markup into Gemini TTS audio
+          tags rather than preserving the SSML. Specifically: <break>
+          becomes [short pause] or [long pause]; <prosody rate="slow">
+          becomes [slow]; <emphasis> becomes an appropriate expressive tag
+          such as [seriousness], [enthusiasm], or pacing emphasis. The
+          response should explicitly note that Gemini TTS does NOT parse
+          SSML and will either ignore or error on those tags.

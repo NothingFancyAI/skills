@@ -1,0 +1,10 @@
+{
+  "name": "gemini-tts-prompting",
+  "version": "0.1.0",
+  "description": "Crafts and reviews prompts for Google's Gemini 3.1 Flash TTS (text-to-speech) model using audio tags, voice style instructions, and pacing controls. Use when asked to write, refine, or debug a TTS prompt for Gemini, Vertex AI speech generation, or Google AI Studio speech; when adding expressive audio tags like [whispers] or [excitement], controlling pacing with [slow]/[fast]/[short pause]/[long pause], or directing voice style and accent for narration, audiobooks, IVR, accessibility, or game audio.",
+  "author": {
+    "name": "Wesley O. Nichols",
+    "email": "wes@nothingfancy.ai",
+    "url": "https://nothingfancy.ai"
+  }
+}

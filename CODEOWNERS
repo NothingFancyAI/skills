@@ -8,6 +8,7 @@
 /plugins/spec-anchored-development/        @wesnick
 /plugins/justfile/                         @wesnick
 /plugins/nano-banana-prompting/            @wesnick
+/plugins/gemini-tts-prompting/             @wesnick
 
 # Shared infrastructure
 /.github/                                  @wesnick

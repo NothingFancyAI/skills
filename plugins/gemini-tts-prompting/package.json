@@ -1,0 +1,28 @@
+{
+  "name": "@nothingfancy/gemini-tts-prompting",
+  "version": "0.1.0",
+  "description": "Crafts and reviews prompts for Google's Gemini 3.1 Flash TTS using audio tags, voice style instructions, and pacing controls.",
+  "keywords": [
+    "pi-package",
+    "agent-skill",
+    "gemini",
+    "gemini-tts",
+    "text-to-speech",
+    "tts",
+    "audio-tags",
+    "vertex-ai",
+    "prompting"
+  ],
+  "author": {
+    "name": "Wesley O. Nichols",
+    "email": "wes@nothingfancy.ai",
+    "url": "https://nothingfancy.ai"
+  },
+  "license": "CC-BY-SA-4.0",
+  "pi": {
+    "skills": ["./skills"]
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*"
+  }
+}
