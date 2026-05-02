@@ -29,4 +29,4 @@ Use Go-native anchors and ownership boundaries.
 - spec -> `cmd/api/`, `internal/service/`, `internal/store/`
 - spec -> `pkg/client/` when there is a supported library surface
 - spec -> `migrations/`, `api/`, `test/`
-- code breadcrumb -> package comment, doc.go, or nearby design README
+- code back-link -> `// Spec:` comment per the [canonical back-link format](../SKILL.md#code-to-spec-back-link-format); for package-level ownership, place it in `doc.go`

@@ -28,4 +28,4 @@ Use Python-native anchors in specs instead of generic pseudocode.
 - spec -> `src/package/subsystem/`
 - spec -> `app/api/routes.py`
 - spec -> `package/services/`, `package/models/`, `tests/`
-- code breadcrumb -> package docstring, module header comment, or adjacent README if the repo already uses those patterns
+- code back-link -> `# Spec:` comment per the [canonical back-link format](../SKILL.md#code-to-spec-back-link-format); for package-level ownership, place it in `__init__.py`

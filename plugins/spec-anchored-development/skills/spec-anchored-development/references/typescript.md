@@ -27,4 +27,4 @@ Use TypeScript-native anchors across backend, frontend, or full-stack repos.
 
 - spec -> `packages/*`, `apps/*`, `src/server/`, `src/lib/`, `src/routes/`
 - spec -> `openapi/`, `prisma/`, `migrations/`, `workers/`
-- code breadcrumb -> package README, file header, route module comment, or generated doc index already used by the repo
+- code back-link -> `// Spec:` comment per the [canonical back-link format](../SKILL.md#code-to-spec-back-link-format)
