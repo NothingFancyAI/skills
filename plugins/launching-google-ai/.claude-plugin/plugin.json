@@ -1,0 +1,10 @@
+{
+  "name": "launching-google-ai",
+  "version": "0.1.0",
+  "description": "Opens Google Gemini or Google Stitch in the browser with a pre-filled prompt and optional Gemini tool (image, video, music, deep research, canvas, guided learning). Use when asked to 'ask Gemini', 'open Gemini with', 'stitch this', 'use deep research on', 'generate a video in Gemini', or otherwise launch a prefilled Gemini or Stitch session via URL parameters from the shell. Does not auto-submit — only pre-fills the prompt box.",
+  "author": {
+    "name": "Wesley O. Nichols",
+    "email": "wes@nothingfancy.ai",
+    "url": "https://nothingfancy.ai"
+  }
+}
