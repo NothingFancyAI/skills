@@ -1,0 +1,135 @@
+# Regression suite for launching-google-ai skill
+
+description: "launching-google-ai skill regression cases"
+
+tests:
+  # --- Positive: Gemini deep-research launch ---
+  - description: "Positive — 'ask gemini to research X' should build a Gemini deep-research URL"
+    vars:
+      prompt: |
+        ask gemini to research the history of LISP
+    assert:
+      - type: contains
+        value: "https://gemini.google.com/?prompt="
+      - type: contains
+        value: "tool=research"
+      - type: contains-any
+        value:
+          - "the%20history%20of%20LISP"
+          - "the+history+of+LISP"
+      - type: contains-any
+        value:
+          - "${BROWSER:-xdg-open}"
+          - "$BROWSER"
+      - type: llm-rubric
+        value: |
+          The response must: (1) build a URL on gemini.google.com (NOT
+          stitch.withgoogle.com, NOT any other Google surface), (2) use
+          ?prompt= as the parameter (NOT ?q= or ?query=), (3) percent-encode
+          the prompt text, (4) include &tool=research because the user said
+          "research", using the SHORT alias "research" rather than the human
+          label "Deep research", and (5) open the URL via ${BROWSER:-xdg-open}
+          (or equivalent fallback) so a user-configured browser is honored.
+          The response must NOT attempt to auto-submit the prompt — pre-fill
+          only.
+
+  # --- Positive: Stitch design launch (no tool param) ---
+  - description: "Positive — 'stitch a pricing page' should build a Stitch URL with no tool parameter"
+    vars:
+      prompt: |
+        stitch a clean SaaS pricing page with three tiers
+    assert:
+      - type: contains
+        value: "https://stitch.withgoogle.com/?prompt="
+      - type: not-contains
+        value: "tool="
+      - type: llm-rubric
+        value: |
+          The response must: (1) target stitch.withgoogle.com, NOT
+          gemini.google.com, because the user explicitly said "stitch",
+          (2) NOT include any &tool=... parameter — Stitch does not accept a
+          tool parameter and adding one is wrong, (3) percent-encode the
+          design brief into the prompt= parameter verbatim (the user's words,
+          not paraphrased), (4) open via ${BROWSER:-xdg-open} or equivalent.
+
+  # --- Negative: prompt-craft request should NOT fire this skill ---
+  - description: "Negative — 'help me write a prompt for Gemini image gen' is a prompt-craft task, not a launch task"
+    vars:
+      prompt: |
+        Help me write a prompt for Gemini image generation of a vintage
+        bookstore at golden hour with reference photos I'll attach.
+    assert:
+      - type: not-contains
+        value: "gemini.google.com/?prompt="
+      - type: not-contains
+        value: "xdg-open"
+      - type: not-contains
+        value: "${BROWSER"
+      - type: llm-rubric
+        value: |
+          The response must address prompt-craft for Gemini image generation
+          on its own terms (subject + action + location + composition + style,
+          camera/lighting direction, treatment of reference images, etc.) —
+          this is the territory of the nano-banana-prompting skill, NOT
+          launching-google-ai. The response must NOT construct a
+          gemini.google.com URL, must NOT call xdg-open or $BROWSER, and must
+          NOT instruct the user to launch the Gemini web UI. The launching
+          skill should not fire because the user is asking how to write the
+          prompt, not how to open Gemini.
+
+  # --- Edge: multi-line prompt with special chars must encode newlines ---
+  - description: "Edge — multi-line prompt should encode newlines as %0A and preserve special chars"
+    vars:
+      prompt: |
+        Open Gemini with this multi-line prompt and use deep research:
+
+        Compare Rust and Zig for systems work.
+        Cover: memory model, async story, & C interop.
+        Cite sources.
+    assert:
+      - type: contains
+        value: "https://gemini.google.com/?prompt="
+      - type: contains
+        value: "tool=research"
+      - type: contains
+        value: "%0A"
+      - type: contains-any
+        value:
+          - "%26"
+          - "&amp;"
+      - type: llm-rubric
+        value: |
+          The response must: (1) percent-encode every newline in the
+          multi-line prompt as %0A so the prompt arrives in the Gemini box
+          with line breaks intact, (2) percent-encode the literal "&"
+          character inside the prompt body as %26 so it is NOT interpreted as
+          a URL parameter separator (this is the historically-broken case —
+          an unencoded "&" silently truncates the prompt at the ampersand),
+          (3) still produce a single well-formed URL with ?prompt=... and
+          &tool=research, (4) open via ${BROWSER:-xdg-open}.
+
+  # --- Edge: ambiguous tool cue should default to omitting tool= ---
+  - description: "Edge — ambiguous request without a clear tool cue should omit the tool parameter"
+    vars:
+      prompt: |
+        open gemini and ask it what the weather will be like in Madrid this
+        weekend
+    assert:
+      - type: contains
+        value: "https://gemini.google.com/?prompt="
+      - type: not-contains
+        value: "tool=research"
+      - type: not-contains
+        value: "tool=image"
+      - type: not-contains
+        value: "tool=video"
+      - type: llm-rubric
+        value: |
+          The response must build a Gemini URL with ?prompt=... but must NOT
+          include any &tool=... parameter, because the user's request ("ask
+          it what the weather will be like") does not clearly match any of
+          the six known tool aliases (image, video, music, research, canvas,
+          learn). The skill's documented behavior is to omit tool= when the
+          intent is ambiguous and let Gemini pick a default. The response
+          must NOT fabricate an unsupported tool name like "weather",
+          "search", or "ask".

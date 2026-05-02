@@ -1,0 +1,26 @@
+{
+  "name": "@nothingfancy/launching-google-ai",
+  "version": "0.1.0",
+  "description": "Opens Google Gemini or Google Stitch in the browser with a pre-filled prompt and optional Gemini tool selection.",
+  "keywords": [
+    "pi-package",
+    "agent-skill",
+    "gemini",
+    "stitch",
+    "google-ai",
+    "browser-launcher",
+    "url-prompt"
+  ],
+  "author": {
+    "name": "Wesley O. Nichols",
+    "email": "wes@nothingfancy.ai",
+    "url": "https://nothingfancy.ai"
+  },
+  "license": "CC-BY-SA-4.0",
+  "pi": {
+    "skills": ["./skills"]
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*"
+  }
+}

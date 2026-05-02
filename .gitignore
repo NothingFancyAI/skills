@@ -20,3 +20,5 @@ evals/transcripts/*
 evals/reports/*
 !evals/reports/.gitkeep
 evals/.promptfoo-cache/
+
+scratchpad/

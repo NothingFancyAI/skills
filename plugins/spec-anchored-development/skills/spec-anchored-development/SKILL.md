@@ -1,11 +1,27 @@
 ---
-name: specs
+name: spec-anchored-development
 description: This skill should be used when the user asks to "create a spec", "write a specification", "generate a spec from code", "maintain specs", "sync specs with code", "spec:code graph", "greenfield spec", "brownfield spec", "reverse-engineer a spec", "document system architecture", or mentions spec-anchored development. Supports Python, Go, and TypeScript projects.
 ---
 
 # Spec-Anchored Development
 
 Specifications are living system maps, not static documentation. Every spec maintains a bidirectional graph with implementing code: spec to code for execution, code to spec for comprehension.
+
+## When to Use
+
+- The user asks to author a new spec, formalize a system's design, or bootstrap a system map for an existing codebase.
+- The user wants to derive specs from existing code (brownfield / reverse-engineering) and have them stay synced.
+- The user is editing code or specs in a project that already uses spec-anchored development and wants the bidirectional graph kept current.
+- The user mentions "spec drift", "spec:code graph", "system map", "greenfield spec", "brownfield spec", or asks to audit a project's specs against its code.
+- The project is in Python, Go, or TypeScript — the language references in this skill cover those three.
+
+## When NOT to Use
+
+- The user wants a one-off design doc, README, or ADR with no ongoing maintenance contract — this skill assumes a maintained spec/code graph and adds friction otherwise.
+- The user wants pure interface documentation (OpenAPI, protobuf, JSON Schema) — those are interface specs, not system specs, and have their own tooling.
+- The user wants a project-management plan, milestone roadmap, or sprint breakdown — use a planning skill; specs own the *what* and *why*, not the *when*.
+- The user wants implementation-level pseudocode or algorithm walkthroughs — code owns the *how*; this skill explicitly pushes back on implementation in specs.
+- The project is in a language other than Python, Go, or TypeScript — the language-specific guidance does not yet cover other ecosystems, and harness-neutral parts won't be enough on their own.
 
 ## Optimization targets
 
